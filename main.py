@@ -12,7 +12,7 @@ SLACK_ID = config['User']['slack_id']
 GOAL_NAME = config['Session']['goal_name']
 SESSION_NAME_BASE = config['Session']['session_name_base']
 MAX_SESSIONS = int(config['Session']['max_sessions'])
-BREAK_DURATION = int(config['Breaks']['break_duration'])  # Break duration in seconds
+BREAK_DURATION = int(config['Breaks']['break_duration'])  # 30 minutes in seconds
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
@@ -32,19 +32,26 @@ def start_session(session_number):
 
 def wait_for_break_period():
     current_time = datetime.now().time()
-    if (current_time.hour == 12 and current_time.minute < 60) or (current_time.hour == 18 and current_time.minute < 60):
-        print(f"Break time! Waiting for {BREAK_DURATION / 60} minutes.")
+    if (12 <= current_time.hour < 13) or (18 <= current_time.hour < 19):
+        print(f"Taking a meal break at {current_time}. Waiting for {BREAK_DURATION / 60} minutes.")
         time.sleep(BREAK_DURATION)
+    elif (22 <= current_time.hour or current_time.hour < 7):
+        print(f"Sleeping break. Current time: {current_time}.")
+        sleep_end = datetime.combine(datetime.today(), datetime.time(7, 0, 0))
+        if current_time.hour >= 22:
+            sleep_end = sleep_end + timedelta(days=1)  # Adjust to next day if it's currently past 10 PM
+        sleep_duration = (sleep_end - datetime.now()).total_seconds()
+        time.sleep(sleep_duration)
 
 def run_sessions():
     session_number = 1
     while session_number <= MAX_SESSIONS:
         current_time = datetime.now().time()
         
-        # Check for the break period
-        if (12 <= current_time.hour < 13) or (18 <= current_time.hour < 19):
+        # Check if within break periods
+        if (12 <= current_time.hour < 13) or (18 <= current_time.hour < 19) or (22 <= current_time.hour or current_time.hour < 7):
             wait_for_break_period()
-
+        
         # Start a new session
         start_session(session_number)
         session_number += 1
