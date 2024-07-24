@@ -30,22 +30,27 @@ def start_session(session_number):
     else:
         print(f"Failed to start session: {session_name}", response.text)
 
+def wait_for_break_period():
+    current_time = datetime.now().time()
+    if (current_time.hour == 12 and current_time.minute < 60) or (current_time.hour == 18 and current_time.minute < 60):
+        print(f"Break time! Waiting for {BREAK_DURATION / 60} minutes.")
+        time.sleep(BREAK_DURATION)
+
 def run_sessions():
     session_number = 1
     while session_number <= MAX_SESSIONS:
         current_time = datetime.now().time()
-        if (current_time.hour == 12 ) or (current_time.hour == 18):
-            print(f"Taking a break at {current_time}.")
-            time.sleep(BREAK_DURATION)
-            start_session(session_number)
-            session_number += 1
-            # Wait for 1 hour and 3 minutes
-            time.sleep(3600 + 180)
         
+        # Check for the break period
+        if (12 <= current_time.hour < 13) or (18 <= current_time.hour < 19):
+            wait_for_break_period()
+
+        # Start a new session
         start_session(session_number)
         session_number += 1
-        # Wait for 1 hour and 3 minutes
-        time.sleep(3600 + 180)  # 3600 seconds in an hour + 180 seconds (3 minutes)
+        
+        # Wait for 1 hour and 3 minutes before the next session
+        time.sleep(3600 + 180)
 
 if __name__ == "__main__":
     run_sessions()
