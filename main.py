@@ -1,10 +1,15 @@
 import time
 import requests
+import configparser
 
-API_KEY = "your_api_key_here"  # Replace with your API key
-SLACK_ID = "your_slack_id_here"  # Replace with the Slack ID
-GOAL_NAME = "Hack Hour (Arcade)"
-SESSION_NAME_BASE = "blaha blah ahdsl"
+# Read configuration from config.ini
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+API_KEY = config['API']['key']
+SLACK_ID = config['User']['slack_id']
+GOAL_NAME = config['Session']['goal_name']
+SESSION_NAME_BASE = config['Session']['session_name_base']
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
@@ -22,3 +27,13 @@ def start_session(session_number):
     else:
         print(f"Failed to start session: {session_name}", response.text)
 
+def run_sessions():
+    session_number = 1
+    while True:
+        start_session(session_number)
+        session_number += 1
+        # Wait for 1 hour and 3 minutes
+        time.sleep(3600 + 180)  # 3600 seconds in an hour + 180 seconds (3 minutes)
+
+if __name__ == "__main__":
+    run_sessions()
