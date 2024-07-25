@@ -1,7 +1,9 @@
 import time
 import requests
 import configparser
-from datetime import datetime
+import shutil
+import os
+from datetime import datetime, timedelta
 
 # Read configuration from config.ini
 config = configparser.ConfigParser()
@@ -13,6 +15,8 @@ GOAL_NAME = config['Session']['goal_name']
 SESSION_NAME_BASE = config['Session']['session_name_base']
 MAX_SESSIONS = int(config['Session']['max_sessions'])
 BREAK_DURATION = int(config['Breaks']['break_duration'])  # 30 minutes in seconds
+FOLDER_TO_COPY = "path/to/folder"  # Folder to be copied
+DESTINATION_BASE = "path/to/destination/folder"  # Base destination folder
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
@@ -29,6 +33,12 @@ def start_session(session_number):
         print(f"Started session: {session_name}")
     else:
         print(f"Failed to start session: {session_name}", response.text)
+
+def copy_folder(session_number):
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    destination = os.path.join(DESTINATION_BASE, f"session_{session_number}_{timestamp}")
+    shutil.copytree(FOLDER_TO_COPY, destination)
+    print(f"Copied folder to {destination}")
 
 def wait_for_break_period():
     current_time = datetime.now().time()
@@ -54,6 +64,10 @@ def run_sessions():
         
         # Start a new session
         start_session(session_number)
+        
+        # Copy the folder after session starts
+        copy_folder(session_number)
+
         session_number += 1
         
         # Wait for 1 hour and 3 minutes before the next session
