@@ -83,18 +83,6 @@ Please note that the reliability of the Hack Hour API is not guaranteed. Data lo
 
 Contributions are welcome! If you find a bug or have a suggestion for improvement, feel free to open an issue or submit a pull request.
 
-## Contact
 
-For any questions or support, please contact [Your Name] at [Your Email].
-```
 
-### Explanation
-- **Introduction:** Provides a basic overview of what the script does.
-- **Features:** Lists the key features of the script.
-- **Requirements:** Specifies the required dependencies.
-- **Configuration:** Explains how to set up the `config.ini` file.
-- **How It Works:** Describes the logic of the script.
-- **Running the Script:** Instructions for executing the script.
-- **License, Disclaimer, Contributions, and Contact:** Additional sections typical for open-source projects.
 
-You can adjust the contact details, license, and other information as per your needs.
