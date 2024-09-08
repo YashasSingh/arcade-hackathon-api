@@ -2,6 +2,9 @@
 
 
 # Session Manager for Hack Hour
+![IMG_3618](https://github.com/user-attachments/assets/9fc7f93e-4ddb-4e6d-b03f-b3cfebea8ad9)
+
+
 
 This Python script automates session management for Hack Club's Hack Hour project tracker. It checks for active sessions, manages break periods, and starts new sessions at regular intervals, with configurable parameters stored in an `.ini` file.
 
